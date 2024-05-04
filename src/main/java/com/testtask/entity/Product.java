@@ -1,17 +1,23 @@
 package com.testtask.entity;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "Products")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     @NotNull(groups = {Save.class})
     @Size(min=1, max = 255, message = "{validation.name.size.too_long}", groups = {Save.class, Update.class})
     private String name;

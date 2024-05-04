@@ -1,6 +1,7 @@
 package com.testtask.controller;
 
 import com.testtask.entity.Product;
+import com.testtask.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,79 +9,48 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
+@RequiredArgsConstructor
 public class ProductController implements ApiController<Product> {
 
-    private ArrayList<Product> productList;
-
-    public ProductController() {
-        productList = new ArrayList<>();
-        productList.add(Product.builder()
-                .id(1L)
-                .name("Товар1")
-                .description("Описание1")
-                .price(150.0)
-                .available(true)
-                .build());
-    }
+    private final ProductService productService;
 
     @GetMapping()
-    public ResponseEntity<ArrayList<Product>> getAll() {
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+    public ResponseEntity<List<Product>> getAll() {
+        return new ResponseEntity<>(productService.readAll(), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<Product> create(@RequestBody @Validated(Product.Save.class)  Product entity) {
-        productList.add(entity);
+    public ResponseEntity<Product> create(@RequestBody @Validated(Product.Save.class)  Product product) {
+        productService.save(product);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getEntity(@PathVariable Long productId) {
-        Product product = null;
-        for (Product item: productList){
-            if (productId.equals(item.getId())){
-                product = item;
-                break;
-            }
-        }
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(productService.readById(productId), HttpStatus.OK);
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Product> updateEntity(@RequestBody @Validated(Product.Update.class) Product product, @PathVariable Long productId) {
-        for (int i = 0; i < productList.size(); i++){
-            if (productId.equals(productList.get(i).getId())){
-                Product productUpdate = productList.get(i);
-                if (product.getId() != null) productUpdate.setId(product.getId());
-                if (product.getName() != null) productUpdate.setName(product.getName());
-                if (product.getDescription() != null) productUpdate.setDescription(product.getDescription());
-                if (product.getPrice() != null) productUpdate.setPrice(product.getPrice());
-                if (product.getAvailable() != null) productUpdate.setAvailable(product.getAvailable());
-
-                break;
-            }
-        }
+        Product productEdit = productService.readById(productId);
+        if (product.getPrice() != null) productEdit.setPrice(product.getPrice());
+        if (product.getAvailable() != null) productEdit.setAvailable(product.getAvailable());
+        if (product.getDescription() != null) productEdit.setDescription(product.getDescription());
+        if (product.getName() != null) productEdit.setName(product.getName());
+        productService.save(productEdit);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Product> patchEntity(Map<String, ?> args, Long entityId) {
-        return null;
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteEntity(Long productId) {
-        for (int i = 0; i < productList.size(); i++){
-            if (productId.equals(productList.get(i).getId())){
-                productList.remove(i);
-                break;
-            }
+        if (productService.delete(productId)) {
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
