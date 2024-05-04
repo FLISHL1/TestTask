@@ -51,9 +51,15 @@ public class ProductController implements ApiController<Product> {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<Product> updateEntity(Product entity, Long entityId) {
-        return null;
+    @PutMapping("/{productId}")
+    public ResponseEntity<Product> updateEntity(@RequestBody @Validated Product product, @PathVariable Long productId) {
+        for (int i = 0; i < productList.size(); i++){
+            if (productId.equals(productList.get(i).getId())){
+                productList.set(i, product);
+                break;
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
