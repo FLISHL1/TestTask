@@ -58,8 +58,7 @@ public class ProductController implements ApiController<Product> {
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteEntity(@PathVariable Long productId) {
-        System.out.println(productId);
+    public ResponseEntity<String> deleteEntity(Long productId) {
         if (productService.delete(productId)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }

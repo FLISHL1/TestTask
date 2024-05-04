@@ -33,4 +33,5 @@ public class Product {
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean available;
 
+
 }
