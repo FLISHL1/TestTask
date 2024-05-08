@@ -20,7 +20,7 @@ public class ProductController implements ApiController<Product> {
     public ProductController() {
         productList = new ArrayList<>();
         productList.add(Product.builder()
-                .id(1)
+                .id(1L)
                 .name("Товар1")
                 .description("Описание1")
                 .price(150.0)
@@ -34,7 +34,7 @@ public class ProductController implements ApiController<Product> {
     }
 
     @PostMapping()
-    public ResponseEntity<Product> create(@Valid @RequestBody  Product entity) {
+    public ResponseEntity<Product> create(@RequestBody @Validated(Product.Save.class)  Product entity) {
         productList.add(entity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -52,10 +52,16 @@ public class ProductController implements ApiController<Product> {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateEntity(@RequestBody @Validated Product product, @PathVariable Long productId) {
+    public ResponseEntity<Product> updateEntity(@RequestBody @Validated(Product.Update.class) Product product, @PathVariable Long productId) {
         for (int i = 0; i < productList.size(); i++){
             if (productId.equals(productList.get(i).getId())){
-                productList.set(i, product);
+                Product productUpdate = productList.get(i);
+                if (product.getId() != null) productUpdate.setId(product.getId());
+                if (product.getName() != null) productUpdate.setName(product.getName());
+                if (product.getDescription() != null) productUpdate.setDescription(product.getDescription());
+                if (product.getPrice() != null) productUpdate.setPrice(product.getPrice());
+                if (product.getAvailable() != null) productUpdate.setAvailable(product.getAvailable());
+
                 break;
             }
         }
