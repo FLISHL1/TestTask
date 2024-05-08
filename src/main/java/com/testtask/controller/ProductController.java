@@ -1,6 +1,9 @@
 package com.testtask.controller;
 
 import com.testtask.entity.Product;
+import com.testtask.entity.ProductDTO;
+import com.testtask.entity.ProductDTOSave;
+import com.testtask.entity.ProductDTOUpdate;
 import com.testtask.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +28,16 @@ public class ProductController implements ApiController<Product> {
     }
 
     @PostMapping()
-    public ResponseEntity<Product> create(@RequestBody @Validated(Product.Save.class)  Product product) {
-        productService.save(product);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Product> create(@RequestBody @Validated(ProductDTO.Save.class) ProductDTOSave productDTO) {
+        Product productSave = Product.builder()
+                .name(productDTO.getName())
+                .description(productDTO.getDescription())
+                .price(productDTO.getPrice())
+                .available(productDTO.getAvailable())
+                .build();
+
+        productService.save(productSave);
+        return new ResponseEntity<>(productSave, HttpStatus.OK);
     }
 
     @GetMapping("/{productId}")
@@ -36,18 +46,20 @@ public class ProductController implements ApiController<Product> {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Product> updateEntity(@RequestBody @Validated(Product.Update.class) Product product, @PathVariable Long productId) {
-        Product productEdit = productService.readById(productId);
-        if (product.getPrice() != null) productEdit.setPrice(product.getPrice());
-        if (product.getAvailable() != null) productEdit.setAvailable(product.getAvailable());
-        if (product.getDescription() != null) productEdit.setDescription(product.getDescription());
-        if (product.getName() != null) productEdit.setName(product.getName());
-        productService.save(productEdit);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Product> updateEntity(@RequestBody @Validated(ProductDTO.Update.class) ProductDTOUpdate productDTO, @PathVariable Long productId) {
+        Product product = productService.readById(productId);
+        if (productDTO.getPrice() != null) product.setPrice(productDTO.getPrice());
+        if (productDTO.getAvailable() != null) product.setAvailable(productDTO.getAvailable());
+        if (productDTO.getDescription() != null) product.setDescription(productDTO.getDescription());
+        if (productDTO.getName() != null) product.setName(productDTO.getName());
+
+        productService.save(product);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteEntity(Long productId) {
+    public ResponseEntity<String> deleteEntity(@PathVariable Long productId) {
+        System.out.println(productId);
         if (productService.delete(productId)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }

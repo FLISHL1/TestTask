@@ -11,11 +11,7 @@ import java.util.List;
 import java.util.Map;
 public interface ApiController<T> {
     public ResponseEntity<List<Product>> getAll();
+    public ResponseEntity getEntity(Long entityId);
 
-    public ResponseEntity<T> create(@RequestBody @Valid T entity);
-
-    public ResponseEntity getEntity(@PathVariable Long entityId);
-    public ResponseEntity<T> updateEntity(@RequestBody @Validated T entity, @PathVariable Long entityId);
-
-    public ResponseEntity<String> deleteEntity(@PathVariable Long entityId);
+    public ResponseEntity<String> deleteEntity(Long entityId);
 }
