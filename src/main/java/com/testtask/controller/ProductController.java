@@ -5,7 +5,6 @@ import com.testtask.entity.ProductDTO;
 import com.testtask.entity.ProductDTOSave;
 import com.testtask.entity.ProductDTOUpdate;
 import com.testtask.service.ProductService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")

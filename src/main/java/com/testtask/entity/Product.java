@@ -26,7 +26,6 @@ public class Product {
     @Column(length = 4096)
     private String description;
 
-    @Length(min = 0)
     @Column(columnDefinition = "DOUBLE PRECISION CHECK (price >= 0) DEFAULT 0 ")
     private Double price;
 
