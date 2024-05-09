@@ -16,7 +16,7 @@
             <directory>${project.basedir}/target</directory>
             <outputDirectory>./</outputDirectory>
             <includes>
-                <include>app.jar</include>
+                <include>testtask-3.2.5.jar</include>
             </includes>
         </fileSet>
     </fileSets>
