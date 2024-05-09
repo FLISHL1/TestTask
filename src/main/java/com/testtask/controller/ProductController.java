@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -21,8 +22,8 @@ public class ProductController implements ApiController<Product> {
     private final ProductService productService;
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getAll() {
-        return new ResponseEntity<>(productService.readAll(), HttpStatus.OK);
+    public ResponseEntity<List<Product>> getAll(@RequestParam(required = false) Map<String, String> args) {
+        return new ResponseEntity<>(productService.readAll(args), HttpStatus.OK);
     }
 
     @PostMapping()

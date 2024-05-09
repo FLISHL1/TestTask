@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Map;
 public interface ApiController<T> {
-    public ResponseEntity<List<Product>> getAll();
+    public ResponseEntity<List<Product>> getAll(Map<String, String> args);
 
     public ResponseEntity getEntity(Long entityId);
 

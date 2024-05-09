@@ -17,7 +17,6 @@ import org.hibernate.validator.constraints.Length;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(unique = true)
     private Long id;
 
     @Column(nullable = false, length = 255)
